@@ -5,11 +5,17 @@ const connectDB = require('./config/db');
 
 const app = express();
 
-// Connect to MongoDB (with error logging)
-connectDB().catch(err => {
-  console.error('❌ Failed to connect to MongoDB:', err.message);
-  process.exit(1);
-});
+// Connect to MongoDB with detailed logging
+connectDB()
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch(err => {
+    console.error('❌ Failed to connect to MongoDB:');
+    console.error('   - Error name:', err.name);
+    console.error('   - Error message:', err.message);
+    console.error('   - Check if MONGODB_URI is set in Render environment');
+    console.error('   - Check if IP is whitelisted in MongoDB Atlas');
+    process.exit(1);
+  });
 
 // Middleware
 app.use(cors());
