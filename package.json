@@ -1,9 +1,13 @@
 {
   "name": "aehomesbackend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "api/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js"
+  },
+  "engines": {
+    "node": "18.x"
   },
   "keywords": [],
   "author": "",
@@ -19,10 +23,5 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
-  },
-  
-  "engines": {
-    "node": "18.x"
   }
-
 }
