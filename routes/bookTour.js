@@ -12,7 +12,7 @@ router.post('/',
     body('email').isEmail().normalizeEmail(),
     body('phone').notEmpty(),
     body('preferred_date').isISO8601(),
-    body('preferred_time').matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:00$/),
+    body('preferred_time').matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/),
     body('guests').isInt({ min: 1, max: 6 }),
     body('message').optional().trim(),
     body('payment_method').isIn(['credit_card', 'paypal', 'stripe', 'bank_transfer'])
@@ -45,8 +45,14 @@ router.post('/',
         message: 'Booking created successfully'
       });
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ success: false, message: 'Booking failed' });
+      console.error('Booking error:', err);
+      if (err.name === 'ValidationError') {
+        return res.status(400).json({ success: false, message: err.message });
+      }
+      if (err.code === 11000) {
+        return res.status(409).json({ success: false, message: 'Duplicate booking reference, please try again' });
+      }
+      res.status(500).json({ success: false, message: 'Booking failed. Please try again later.' });
     }
   }
 );

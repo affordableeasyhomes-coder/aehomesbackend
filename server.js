@@ -5,9 +5,17 @@ const connectDB = require('./config/db');
 
 const app = express();
 
+const enrichProperties = require('./utils/enrichProperties');
+
 // Connect to MongoDB with detailed logging
 connectDB()
-  .then(() => console.log('✅ MongoDB connected'))
+  .then(() => {
+    console.log('✅ MongoDB connected');
+    // Backfill any property fields older seeds left out (additive, idempotent)
+    enrichProperties()
+      .then(count => { if (count) console.log(`🛠 Enriched ${count} properties with missing fields`); })
+      .catch(err => console.error('Property enrichment failed:', err.message));
+  })
   .catch(err => {
     console.error('❌ Failed to connect to MongoDB:');
     console.error('   - Error name:', err.name);
@@ -25,6 +33,7 @@ app.use(express.json());
 app.use('/api/properties.php', require('./routes/properties'));
 app.use('/api/book_tour.php', require('./routes/bookTour'));
 app.use('/api/payment-method.php', require('./routes/paymentMethods'));
+app.use('/api/contact.php', require('./routes/contact'));
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'OK' }));

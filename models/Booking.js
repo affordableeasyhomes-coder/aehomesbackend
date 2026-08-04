@@ -15,10 +15,13 @@ const bookingSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-bookingSchema.pre('save', async function(next) {
+// Collision-resistant id: count-based ids break the unique index as soon as
+// any booking is deleted, so derive from timestamp + random instead.
+bookingSchema.pre('save', function(next) {
   if (!this.booking_id) {
-    const count = await this.constructor.countDocuments();
-    this.booking_id = `BOK-${(count + 1).toString().padStart(5, '0')}`;
+    const stamp = Date.now().toString(36).toUpperCase();
+    const rand = Math.floor(Math.random() * 1296).toString(36).toUpperCase().padStart(2, '0');
+    this.booking_id = `BOK-${stamp}${rand}`;
   }
   next();
 });

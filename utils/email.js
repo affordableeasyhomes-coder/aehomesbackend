@@ -32,4 +32,19 @@ const sendBookingConfirmation = async (booking, property) => {
   await transporter.sendMail(mailOptions);
 };
 
-module.exports = { sendBookingConfirmation };
+const sendContactNotification = async (contactMessage) => {
+  if (!transporter || !process.env.CONTACT_INBOX) return;
+  await transporter.sendMail({
+    from: process.env.EMAIL_FROM,
+    to: process.env.CONTACT_INBOX,
+    subject: `New contact message: ${contactMessage.subject}`,
+    html: `
+      <h3>New message from ${contactMessage.name}</h3>
+      <p><strong>Email:</strong> ${contactMessage.email}</p>
+      <p><strong>Subject:</strong> ${contactMessage.subject}</p>
+      <p>${contactMessage.message}</p>
+    `
+  });
+};
+
+module.exports = { sendBookingConfirmation, sendContactNotification };
