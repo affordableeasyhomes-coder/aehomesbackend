@@ -52,7 +52,8 @@ router.post('/',
       if (err.code === 11000) {
         return res.status(409).json({ success: false, message: 'Duplicate booking reference, please try again' });
       }
-      res.status(500).json({ success: false, message: 'Booking failed. Please try again later.' });
+      // TEMP DIAGNOSTIC: surface error details while debugging the 500
+      res.status(500).json({ success: false, message: 'Booking failed. Please try again later.', debug: { name: err.name, code: err.code, detail: err.message } });
     }
   }
 );
