@@ -17,13 +17,13 @@ const bookingSchema = new mongoose.Schema({
 
 // Collision-resistant id: count-based ids break the unique index as soon as
 // any booking is deleted, so derive from timestamp + random instead.
-bookingSchema.pre('save', function(next) {
+// Note: Mongoose 9 hooks are promise-based — no `next` callback.
+bookingSchema.pre('save', function() {
   if (!this.booking_id) {
     const stamp = Date.now().toString(36).toUpperCase();
     const rand = Math.floor(Math.random() * 1296).toString(36).toUpperCase().padStart(2, '0');
     this.booking_id = `BOK-${stamp}${rand}`;
   }
-  next();
 });
 
 module.exports = mongoose.model('Booking', bookingSchema);
