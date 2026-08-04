@@ -26,17 +26,17 @@ const sendBookingConfirmation = async (booking, property) => {
       <p>Booking ID: <strong>${booking.booking_id}</strong></p>
       <p>Please complete the payment via your selected method to finalize the tour.</p>
       <hr/>
-      <p>Need help? Contact support@easyaffordablehome.com</p>
+      <p>Need help? Contact westleykate71@gmail.com or +1 (716) 889-1380</p>
     `
   };
   await transporter.sendMail(mailOptions);
 };
 
 const sendContactNotification = async (contactMessage) => {
-  if (!transporter || !process.env.CONTACT_INBOX) return;
+  if (!transporter) return;
   await transporter.sendMail({
     from: process.env.EMAIL_FROM,
-    to: process.env.CONTACT_INBOX,
+    to: process.env.CONTACT_INBOX || 'westleykate71@gmail.com',
     subject: `New contact message: ${contactMessage.subject}`,
     html: `
       <h3>New message from ${contactMessage.name}</h3>
