@@ -47,7 +47,7 @@ router.get('/:id', async (req, res) => {
     res.json({
       success: true,
       property,
-      tour_fee: parseFloat(process.env.TOUR_FEE || 50)
+      tour_fee: parseFloat(process.env.TOUR_FEE || 500)
     });
   } catch (err) {
     console.error(err);
