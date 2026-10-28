@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
       success: true,
       properties,
       states: allStates,
-      tour_fee: parseFloat(process.env.TOUR_FEE || 50),
+      tour_fee: parseFloat(process.env.TOUR_FEE || 500),
       stats: {
         total_properties: totalProperties,
         countries: countriesCount
