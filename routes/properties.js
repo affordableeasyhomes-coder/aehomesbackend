@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Property = require('../models/Property');
 
+// ---- Read TOUR_FEE once, safely ----
+const parsedFee = Number(process.env.TOUR_FEE);
+const TOUR_FEE = Number.isFinite(parsedFee) ? parsedFee : 500;
+
 router.get('/', async (req, res) => {
   try {
     const { state, type, min_price, max_price } = req.query;
@@ -23,7 +27,7 @@ router.get('/', async (req, res) => {
       success: true,
       properties,
       states: allStates,
-      tour_fee: parseFloat(process.env.TOUR_FEE || 500),
+      tour_fee: TOUR_FEE,           // ← changed
       stats: {
         total_properties: totalProperties,
         countries: countriesCount
@@ -47,7 +51,7 @@ router.get('/:id', async (req, res) => {
     res.json({
       success: true,
       property,
-      tour_fee: parseFloat(process.env.TOUR_FEE || 500)
+      tour_fee: TOUR_FEE            // ← changed
     });
   } catch (err) {
     console.error(err);
